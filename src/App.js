@@ -15,36 +15,46 @@ class App extends Component {
       result: 0,
       isFinalResult: false,
       computeText:'',
-      operation:''
     };
   }
 
   componentDidMount =()=>{
     document.onkeypress =(event)=>{
-      if(Numbers.includes(event.key) || Functions.includes(event.key) || Others.includes(event.key)){
-        if (Numbers.includes(event.key)) {
-          this.updateNumber(event.key);
-        }
+    event.preventDefault();
+      if (Numbers.includes(event.key)) {
+        this.updateNumber(event.key);
+      }
 
-        if (Functions.includes(event.key)) {
-          this.updateOperation(event.key);
-        }
+      if (Functions.includes(event.key)) {
+        this.updateOperation(event.key);
+      }
 
-        if (Others.includes(event.key)) {
-          this.updateResult();
-        }
+      if (Others.includes(event.key)) {
+        this.updateResult();
       }
     }
   }
 
   updateResult = () => {
     this.updateOperation(this.state.operation);
+    this.setState({
+      number: '',
+      operation: '',
+      computeText:'',
+      isFinalResult: true
+    })
   }
 
   updateNumber = num => {
+    if(this.state.isFinalResult){
+      this.setState({
+        result: 0,
+        isFinalResult: false,
+      })
+    }
     this.setState(prevState =>({
       number:`${prevState.number}${num}`,
-      computeText:`${prevState.computeText}${prevState.number}${num}`
+      computeText:`${prevState.computeText}${num}`
     }))
   }
 
@@ -55,7 +65,7 @@ class App extends Component {
         this.setState(prevState => ({
           result: prevState.result + num,
           number: '',
-          computeText: `${prevState.number} +`,
+          computeText: `${prevState.computeText} +`,
           operation: '+'
         }));
         break;
@@ -63,7 +73,7 @@ class App extends Component {
         this.setState(prevState => ({
           result: prevState.result - num,
           number: '',
-          computeText: `${prevState.number} -`,
+          computeText: `${prevState.computeText} -`,
           operation: '-'
         }));
         break;
@@ -71,7 +81,7 @@ class App extends Component {
         this.setState(prevState => ({
           result: prevState.result * num,
           number: '',
-          computeText: `${prevState.number} *`,
+          computeText: `${prevState.computeText} *`,
           operation: '*'
         }));
         break;
@@ -79,7 +89,7 @@ class App extends Component {
         this.setState(prevState => ({
           result: prevState.result / num,
           number: '',
-          computeText: `${prevState.number} /`,
+          computeText: `${prevState.computeText} /`,
           operation: '/'
         }));
         break;
@@ -88,17 +98,37 @@ class App extends Component {
     }
   }
 
+  clearAll = () => {
+    this.setState({
+      number: '',
+      operation: '',
+      result: 0,
+      isFinalResult: false,
+      computeText:'',
+      operation:''
+    })
+  }
+
   onNumClick = e => {
     this.updateNumber(e.target.value);
+  }
+
+  onFunClick = e => {
+    this.updateOperation(e.target.value);
   }
 
   render() {
     return (
       <div className="App" onKeyPress={this.handleKeyPress}>
-        <label>Number :{this.state.number}</label>
-        <label>Result :{this.state.result}</label>
-        <label>Text :{this.state.computeText}</label>
-        {Numbers.map(num => (<button className="btn" value={num} onClick={this.onNumClick}>{num}</button>))}
+        <div>
+          <label className="number">{this.state.number}</label>
+          <label className="text">{this.state.computeText}</label>
+        </div>
+        <div className="buttons">
+          {Functions.map(fun => (<div><button className="btn" value={fun} onClick={this.onFunClick}>{fun}</button></div>))}
+          {Numbers.map(num => (<div><button className="btn" value={num} onClick={this.onNumClick}>{num}</button></div>))}
+          <div><button className="btn" onClick={this.clearAll}>Clear</button></div>
+        </div>
       </div>
     );
   }
