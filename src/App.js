@@ -158,7 +158,7 @@ class App extends Component {
     <div className="main">
       <div className="App">
         <div className="display">
-          <div><label className="lbl">{this.state.computeText}</label></div>
+          <div><label className="text">{this.state.computeText}</label></div>
           { !this.state.isFinalResult &&
             <div><label className="lbl">{this.state.number}</label></div>
           }

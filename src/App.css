@@ -42,6 +42,13 @@
   grid-gap: 1px;
   text-align: right;
   padding: 30px;
-  font-size: 500%;
   height: 40%;
+}
+
+.lbl {
+  font-size: 500%;
+}
+
+.text {
+  font-size: 200%;
 }
