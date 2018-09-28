@@ -18,7 +18,7 @@
 .buttons {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
-  height: 60%;
+  height: 45%;
 }
 
 .btn {
@@ -30,11 +30,6 @@
   border-radius: 10px;
   background-color: #d1ccc0;
 }
-
-.clear {
-  grid-column: 1 / 3;
-}
-
 
 .display {
   display: grid;
@@ -51,4 +46,16 @@
 
 .text {
   font-size: 200%;
+}
+
+.operation {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  height: 12%;
+  grid-column-gap:0;
+  width: 100%;
+}
+
+.clear {
+  width: 100%;
 }

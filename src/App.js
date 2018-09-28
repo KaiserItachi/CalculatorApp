@@ -166,12 +166,15 @@ class App extends Component {
             <div><label className="lbl">{this.state.result}</label></div>
           }
         </div>
-        <div className="buttons">
-          {Functions.map(fun => (<div><button className="btn" value={fun} onClick={this.onFunClick}>{fun}</button></div>))}
-          {Numbers.map(num => (<div><button className="btn" value={num} onClick={this.onNumClick}>{num}</button></div>))}
+        <div className="operation">
           <div className="clear"><button className="btn" onClick={this.clearAll}>Clear</button></div>
           <div className="result"><button className="btn" onClick={this.updateResult}>=</button></div>
         </div>
+        <div className="buttons">
+          {Functions.map(fun => (<div><button className="btn" value={fun} onClick={this.onFunClick}>{fun}</button></div>))}
+          {Numbers.map(num => (<div><button className="btn" value={num} onClick={this.onNumClick}>{num}</button></div>))}
+        </div>
+        
       </div>
     </div>
     );
