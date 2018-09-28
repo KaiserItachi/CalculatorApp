@@ -15,6 +15,7 @@ class App extends Component {
       result: 0,
       isFinalResult: false,
       computeText:'',
+      isCalculating: false,
     };
   }
 
@@ -41,7 +42,8 @@ class App extends Component {
       number: '',
       operation: '',
       computeText:'',
-      isFinalResult: true
+      isFinalResult: true,
+      isCalculating: false,
     })
   }
 
@@ -58,6 +60,20 @@ class App extends Component {
     }))
   }
 
+  setInitialCalState = (op, num) => {
+    let isCalculating = false;
+    if(this.state.number !== ''){
+      isCalculating = true;
+    }
+    this.setState(prevState => ({
+      result: num,
+      number: '',
+      computeText: `${prevState.computeText} ${op}`,
+      operation: `${op}`,
+      isCalculating:{isCalculating},
+    }));
+  }
+
   updateOperation = op => {
     const num = Number(this.state.number);
     switch(op){
@@ -66,32 +82,51 @@ class App extends Component {
           result: prevState.result + num,
           number: '',
           computeText: `${prevState.computeText} +`,
-          operation: '+'
+          operation: '+',
+          isCalculating:true,
         }));
         break;
       case '-':
-        this.setState(prevState => ({
-          result: prevState.result - num,
-          number: '',
-          computeText: `${prevState.computeText} -`,
-          operation: '-'
-        }));
+        if(this.state.isCalculating){
+          this.setState(prevState => ({
+            result: prevState.result - num,
+            number: '',
+            computeText: `${prevState.computeText} -`,
+            operation: '-',
+            isCalculating:true,
+          }));
+        }
+        else{
+          this.setInitialCalState('-', num);
+        }
         break;
       case '*':
-        this.setState(prevState => ({
-          result: prevState.result * num,
-          number: '',
-          computeText: `${prevState.computeText} *`,
-          operation: '*'
-        }));
+        if(this.state.isCalculating){
+          this.setState(prevState => ({
+            result: prevState.result * num,
+            number: '',
+            computeText: `${prevState.computeText} *`,
+            operation: '*',
+            isCalculating:true,
+          }));
+        }
+        else{
+          this.setInitialCalState('*', num);
+        }
         break;
       case '/':
-        this.setState(prevState => ({
-          result: prevState.result / num,
-          number: '',
-          computeText: `${prevState.computeText} /`,
-          operation: '/'
-        }));
+        if(this.state.isCalculating){
+          this.setState(prevState => ({
+            result: prevState.result / num,
+            number: '',
+            computeText: `${prevState.computeText} /`,
+            operation: '/',
+            isCalculating:true,
+          }));
+        }
+        else {
+          this.setInitialCalState('/', num);
+        }
         break;
       default:
         return;
@@ -105,7 +140,8 @@ class App extends Component {
       result: 0,
       isFinalResult: false,
       computeText:'',
-      operation:''
+      operation:'',
+      isCalculating:false,
     })
   }
 
@@ -119,17 +155,25 @@ class App extends Component {
 
   render() {
     return (
-      <div className="App" onKeyPress={this.handleKeyPress}>
-        <div>
-          <label className="number">{this.state.number}</label>
-          <label className="text">{this.state.computeText}</label>
+    <div className="main">
+      <div className="App">
+        <div className="display">
+          <div><label className="lbl">{this.state.computeText}</label></div>
+          { !this.state.isFinalResult &&
+            <div><label className="lbl">{this.state.number}</label></div>
+          }
+          {this.state.isFinalResult && 
+            <div><label className="lbl">{this.state.result}</label></div>
+          }
         </div>
         <div className="buttons">
           {Functions.map(fun => (<div><button className="btn" value={fun} onClick={this.onFunClick}>{fun}</button></div>))}
           {Numbers.map(num => (<div><button className="btn" value={num} onClick={this.onNumClick}>{num}</button></div>))}
-          <div><button className="btn" onClick={this.clearAll}>Clear</button></div>
+          <div className="clear"><button className="btn" onClick={this.clearAll}>Clear</button></div>
+          <div className="result"><button className="btn" onClick={this.updateResult}>=</button></div>
         </div>
       </div>
+    </div>
     );
   }
 }
