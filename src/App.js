@@ -5,32 +5,34 @@ const Numbers = ['1','2','3','4','5','6','7','8','9','0','.'];
 const Others = ['=', 'Enter'];
 const Functions = ['+', '-', '/', '*'];
 
+const initialState = {
+    number: '',
+    operation: '',
+    result: 0,
+    isFinalResult: false,
+    computeText:'',
+    isCalculating: false,
+};
+
 class App extends Component {
   constructor(props){
     super(props)
 
-    this.state = {
-      number: '',
-      operation: '',
-      result: 0,
-      isFinalResult: false,
-      computeText:'',
-      isCalculating: false,
-    };
+    this.state = initialState;
   }
 
   componentDidMount =()=>{
     document.onkeypress =(event)=>{
-    event.preventDefault();
-      if (Numbers.includes(event.key)) {
-        this.updateNumber(event.key);
-      }
+      const { key } = event;
+      event.preventDefault();
 
-      if (Functions.includes(event.key)) {
-        this.updateOperation(event.key);
+      if (Numbers.includes(key)) {
+        this.updateNumber(key);
       }
-
-      if (Others.includes(event.key)) {
+      if (Functions.includes(key)) {
+        this.updateOperation(key);
+      }
+      if (Others.includes(key)) {
         this.updateResult();
       }
     }
@@ -75,7 +77,8 @@ class App extends Component {
   }
 
   updateOperation = op => {
-    const num = Number(this.state.number);
+    const {number, isCalculating} = this.state;
+    const num = Number(number);
     switch(op){
       case '+':
         this.setState(prevState => ({
@@ -87,7 +90,7 @@ class App extends Component {
         }));
         break;
       case '-':
-        if(this.state.isCalculating){
+        if(isCalculating){
           this.setState(prevState => ({
             result: prevState.result - num,
             number: '',
@@ -101,7 +104,7 @@ class App extends Component {
         }
         break;
       case '*':
-        if(this.state.isCalculating){
+        if(isCalculating){
           this.setState(prevState => ({
             result: prevState.result * num,
             number: '',
@@ -115,7 +118,7 @@ class App extends Component {
         }
         break;
       case '/':
-        if(this.state.isCalculating){
+        if(isCalculating){
           this.setState(prevState => ({
             result: prevState.result / num,
             number: '',
@@ -134,36 +137,32 @@ class App extends Component {
   }
 
   clearAll = () => {
-    this.setState({
-      number: '',
-      operation: '',
-      result: 0,
-      isFinalResult: false,
-      computeText:'',
-      operation:'',
-      isCalculating:false,
-    })
+    this.setState(initialState)
   }
 
-  onNumClick = e => {
-    this.updateNumber(e.target.value);
+  onNumClick = ({ target }) => {
+    const { value } = target;
+    this.updateNumber(value);
   }
 
-  onFunClick = e => {
-    this.updateOperation(e.target.value);
+  onFunClick =  ({ target }) => {
+    const { value } = target;
+    this.updateOperation(value);
   }
 
   render() {
+    const { computeText, isFinalResult, number, result} = this.state;
+    
     return (
     <div className="main">
       <div className="App">
         <div className="display">
-          <div><label className="text">{this.state.computeText}</label></div>
-          { !this.state.isFinalResult &&
-            <div><label className="lbl">{this.state.number}</label></div>
+          <div><label className="text">{computeText}</label></div>
+          { !isFinalResult &&
+            <div><label className="lbl">{number}</label></div>
           }
-          {this.state.isFinalResult && 
-            <div><label className="lbl">{this.state.result}</label></div>
+          {isFinalResult && 
+            <div><label className="lbl">{result}</label></div>
           }
         </div>
         <div className="operation">
